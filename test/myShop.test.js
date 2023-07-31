@@ -36,36 +36,60 @@ describe("MyShop", () => {
     await myShop.connect(buyer).buy({ value: tokensToBuy });
 
     const tokensToSell = 2;
-    await myShop.connect(owner).approve(tokensToSell);
-    const initialBalance = await owner.getBalance();
-    const tx = await myShop.connect(owner).sell(tokensToSell);
+    await myShop.connect(buyer).approve(tokensToSell);
+    const initialBalance = await buyer.getBalance();
+    const tx = await myShop.connect(buyer).sell(tokensToSell);
     const receipt = await tx.wait();
     const gasUsed = receipt.gasUsed.mul(tx.gasPrice);
-    const finalBalance = await owner.getBalance();
+    const finalBalance = await buyer.getBalance();
 
     expect(finalBalance).to.equal(
       initialBalance.add(tokensToSell).sub(gasUsed)
     );
   });
 
-  // it("should mint ERC721 token correctly", async () => {
-  //   const tokenId = 1;
-  //   const amount = 1;
+  it("should mint ERC721 token correctly", async () => {
+    const tokenId = 1;
+    const amount = 1;
 
-  //   await myShop._mintERC721Token(tokenId, amount);
+    const tokensToBuy = ethers.utils.parseUnits("5", 0);
+    await myShop.connect(owner).buy({ value: tokensToBuy });
+    const startBalance = await myShop.tokenBalance();
 
-  //   expect(await myShop.NFTtoken.ownerOf(tokenId)).to.equal(owner.address);
-  // });
+    await myShop.connect(owner).approve(amount);
 
-  // it("should mint ERC1155 token correctly", async () => {
-  //   const tokenId = 2;
-  //   const amount = 2;
-  //   const data = ethers.utils.toUtf8Bytes("data");
+    await myShop._mintERC721Token(tokenId, amount);
 
-  //   await myShop._mintERC1155Token(tokenId, amount, data);
+    const finishBalance = await myShop.tokenBalance();
 
-  //   expect(
-  //     await myShop.ERC1155Token.balanceOf(owner.address, tokenId)
-  //   ).to.equal(amount);
-  // });
+    expect(finishBalance).to.equal(+startBalance + amount);
+  });
+
+  it("should mint ERC1155 token correctly", async () => {
+    const tokenId = 2;
+    const amount = 2;
+    const data = ethers.utils.toUtf8Bytes("data");
+
+    const tokensToBuy = ethers.utils.parseUnits("5", 0);
+    await myShop.connect(owner).buy({ value: tokensToBuy });
+    const startBalance = await myShop.tokenBalance();
+
+    await myShop.connect(owner).approve(amount);
+
+    await myShop._mintERC1155Token(tokenId, amount, data);
+
+    const finishBalance = await myShop.tokenBalance();
+
+    expect(finishBalance).to.equal(+startBalance + amount);
+  });
+
+  it("Sender balance correctly", async () => {
+    const tokensToBuy = ethers.utils.parseUnits("5", 0);
+
+    await myShop.connect(buyer).buy({ value: tokensToBuy });
+
+    const senderBalance = await myShop.connect(buyer).senderBalance();
+
+    expect(senderBalance).to.equal(5);
+  });
 });

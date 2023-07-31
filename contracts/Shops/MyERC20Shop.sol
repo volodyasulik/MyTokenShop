@@ -9,6 +9,8 @@ import "../ERC721/MyERC721Token.sol";
 import "../ERC1155/My1155Token.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
+import "hardhat/console.sol";
+
 contract MyShop {
     IERC20 public token;
     MyERC721Token public NFTtoken;
@@ -22,11 +24,6 @@ contract MyShop {
         NFTtoken = new MyERC721Token();
         ERC1155Token = new MyERC1155Token();
         owner = payable(msg.sender);
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "not an owner!");
-        _;
     }
 
     function sell(uint256 _amountToSell) external {
