@@ -1,0 +1,53 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@ethersproject/abi": "^5.4.7",
+    "@ethersproject/providers": "^5.4.7",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^1.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.2",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": "^9.1.0",
+    "@types/node": ">=12.0.0",
+    "chai": "^4.2.0",
+    "ethers": "^5.4.7",
+    "hardhat": "^2.10.2",
+    "hardhat-gas-reporter": "^1.0.8",
+    "solidity-coverage": "^0.7.21",
+    "ts-node": ">=8.0.0",
+    "typechain": "^8.1.0",
+    "typescript": ">=4.5.0"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^0.6.1",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/contracts-upgradeable": "^4.7.3",
+    "@openzeppelin/hardhat-upgrades": "^1.20.0",
+    "dotenv": "^16.0.2",
+    "zod": "^3.19.1"
+  },
+  "scripts": {
+    "deploy:shop": "yarn hardhat run ./scripts/deploy-shop.ts",
+    "deploy:room-factory": "yarn hardhat run ./scripts/deploy-room.ts",
+    "deploy:room-factory:mumbai": "yarn hardhat run ./scripts/deploy-room.ts --network mumbai",
+    "deploy:room-factory:local": "yarn hardhat run ./scripts/deploy-room-factory-local.ts --network localhost",
+    "deploy:game-high-low-factory:local": "yarn hardhat run ./scripts/deploy-game-high-low-factory-local.ts --network localhost",
+    "deploy:erc721:goerli": "yarn deploy:erc721 --network goerli",
+    "deploy:erc721:mainnet": "yarn deploy:erc721 --network mainnet",
+    "test:wol:game-vrf": "npx hardhat test test/wheel-of-luck/WheelOfLuckGameVRFTests.ts",
+    "test:wol:game": "npx hardhat test test/wheel-of-luck/WheelOfLuckGameTests.ts",
+    "test:wol:factory": "npx hardhat test test/wheel-of-luck/WheelOfLuckGameFactoryTests.ts",
+    "test:wol:cron-job": "npx hardhat test test/wheel-of-luck/WheelOfLuckGameCroneJobTests.ts",
+    "test:wol:all": "npx hardhat test test/wheel-of-luck/**",
+    "test:game-engine": "npx hardhat test test/GameEngineTests.ts",
+    "test:hl:game": "npx hardhat test test/game-high-low/GameHighLowTests.ts",
+    "test:hl:all": "npx hardhat test test/game-high-low/**"
+  }
+}
