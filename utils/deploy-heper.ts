@@ -17,6 +17,9 @@ export async function deploy(
 
   const contractFactory = await ethers.getContractFactory(contractName);
   const contract = await contractFactory.deploy(constructorArguments);
+
+  console.log("MyShop deployed to", contract.address);
+
   await contract.deployed();
 
   return contract.address;
