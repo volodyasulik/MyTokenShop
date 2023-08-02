@@ -62,7 +62,10 @@ describe("MyShop", () => {
 
     const finishBalance = await myShop.tokenBalance();
 
+    const ERC721Balance = await myShop.connect(owner).getERC721Balance();
+
     expect(finishBalance).to.equal(+startBalance + amount);
+    expect(ERC721Balance).to.equal(amount);
   });
 
   it("should mint ERC1155 token correctly", async () => {
@@ -78,8 +81,13 @@ describe("MyShop", () => {
 
     await myShop._mintERC1155Token(tokenId, amount, data);
 
+    const ERC1155Balance = await myShop
+      .connect(owner)
+      .getERC1155Balance(tokenId);
+
     const finishBalance = await myShop.tokenBalance();
 
+    expect(ERC1155Balance).to.equal(amount);
     expect(finishBalance).to.equal(+startBalance + amount);
   });
 

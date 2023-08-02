@@ -52,12 +52,15 @@ contract MyShop {
         emit Bought(tokensToBuy, msg.sender);
     }
 
-    function _mintERC721Token(uint256 tokenId, uint256 amount) external {     
-       require(token.balanceOf(owner) >= amount, "Insufficient ERC20 Token");
+    function _mintERC721Token(uint256 tokenId, uint256 amount) external {
+        require(
+            token.balanceOf(msg.sender) >= amount,
+            "Insufficient ERC20 Token"
+        );
 
-        token.transferFrom(owner, address(this), amount);
+        token.transferFrom(msg.sender, address(this), amount);
 
-        NFTtoken.safeMint(owner, Strings.toString(tokenId));
+        NFTtoken.safeMint(msg.sender, Strings.toString(tokenId));
     }
 
     function _mintERC1155Token(
@@ -65,11 +68,14 @@ contract MyShop {
         uint256 amount,
         bytes calldata data
     ) external {
-        require(token.balanceOf(owner) >= amount, "Insuggicient ERC20 Token");
+        require(
+            token.balanceOf(msg.sender) >= amount,
+            "Insuggicient ERC20 Token"
+        );
 
-        token.transferFrom(owner, address(this), amount);
+        token.transferFrom(msg.sender, address(this), amount);
 
-        ERC1155Token.safeMint(owner, tokenId, amount, data);
+        ERC1155Token.safeMint(msg.sender, tokenId, amount, data);
     }
 
     function approve(uint256 amount) external {
@@ -78,6 +84,14 @@ contract MyShop {
 
     function tokenBalance() public view returns (uint256) {
         return token.balanceOf(address(this));
+    }
+
+    function getERC721Balance() external view returns (uint256) {
+        return NFTtoken.balanceOf(msg.sender);
+    }
+
+    function getERC1155Balance(uint id) external view returns (uint256) {
+        return ERC1155Token.balanceOf(msg.sender, id);
     }
 
     function senderBalance() public view returns (uint256) {

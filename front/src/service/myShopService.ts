@@ -1,8 +1,6 @@
 import { Contract, ethers } from "ethers";
 import { contractConection } from "./contractConection";
 
-const HARDHAT_NETWORK_ID = "31337";
-
 class MyShop {
   myShopAction: Contract | undefined;
   constructor() {
@@ -10,26 +8,38 @@ class MyShop {
   }
 
   getTokenBalance = async () => {
-    if (!this._checkNetwork()) {
-      return;
-    }
     try {
       const tokenBalance = await this.myShopAction?.tokenBalance();
-      return { tokenBalance };
+      return tokenBalance;
     } catch (err) {
-      console.log(err as Error);
+      throw new Error(err as string);
     }
   };
 
   getUserBalance = async () => {
-    if (!this._checkNetwork()) {
-      return;
-    }
     try {
       const userBalance = await this.myShopAction?.senderBalance();
-      return { userBalance };
+      return userBalance;
     } catch (err) {
-      console.log(err as Error);
+      throw new Error(err as string);
+    }
+  };
+
+  getERC721Balance = async () => {
+    try {
+      const ERC721Balance = await this.myShopAction?.getERC721Balance();
+      return ERC721Balance;
+    } catch (err) {
+      throw new Error(err as string);
+    }
+  };
+
+  getERC1155Balance = async (id: number) => {
+    try {
+      const ERC1155Balance = await this.myShopAction?.getERC1155Balance(id);
+      return ERC1155Balance;
+    } catch (err) {
+      throw new Error(err as string);
     }
   };
 
@@ -49,28 +59,31 @@ class MyShop {
     }
   };
 
-  buyTokenst = async (value: number) => {
-    try {
-      const tx = await this.myShopAction?.buy({
-        value: ethers.utils.parseUnits(`${value}`, 0),
-      });
+  buyTokens = async (value: number) => {
+    if (typeof window.ethereum !== "undefined") {
+      // await window.ethereum.request({ method: "eth_requestAccounts" });
+      try {
+        const tx = await this.myShopAction?.buy({
+          value: ethers.utils.parseUnits(`${value}`, 0),
+        });
 
-      await tx.wait();
-    } catch (error) {
-      console.error(error);
+        await tx.wait();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
+  sellTokens = async (value: number) => {
+    if (typeof window.ethereum !== "undefined") {
+      // await window.ethereum.request({ method: "eth_requestAccounts" });
+      try {
+        const tx = await this.myShopAction?.sell(value);
 
-  _checkNetwork = () => {
-    if (window.ethereum?.networkVersion === HARDHAT_NETWORK_ID) {
-      return true;
+        await tx.wait();
+      } catch (error) {
+        console.error(error);
+      }
     }
-    if (window.ethereum === undefined) {
-      console.log("Please install Metamask!");
-      return false;
-    }
-    console.error("Please connect to localhost:8545");
-    return false;
   };
 }
 

@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 import { MetaMaskConect } from "./conectToMetaMask";
 import { MYSHOP_ADDRESS } from "../const/address.const";
-import { abi } from "../../../artifacts/contracts/Shops/MyERC20Shop.sol/MyShop.json";
+import contractArtifact from "../contracts/MyShop.json";
+const { abi } = contractArtifact;
 
 export const contractConection = () => {
   try {

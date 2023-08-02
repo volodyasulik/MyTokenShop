@@ -1,6 +1,8 @@
-import { ethers, hardhatArguments, run, upgrades } from "hardhat";
+import { ethers, hardhatArguments, artifacts, run, upgrades } from "hardhat";
 import fs from "fs";
 import { DEPLOYMENT_DETAILS_FOLDER } from "./constants";
+import { Contract } from "ethers";
+import path from "path";
 
 export async function deploy(
   contractName: string,
@@ -19,7 +21,7 @@ export async function deploy(
   const contract = await contractFactory.deploy(constructorArguments);
 
   console.log("MyShop deployed to", contract.address);
-
+  saveFrontendFiles("MyShop", contract);
   await contract.deployed();
 
   return contract.address;
@@ -49,4 +51,25 @@ export const add2Details = (
 
     fs.writeFileSync(filePath, JSON.stringify(details));
   }
+};
+
+const saveFrontendFiles = (projectName: string, contracts: Contract) => {
+  const fs = require("fs");
+  const contractsDir = path.join(__dirname, "..", "front", "src", "contracts");
+
+  if (!fs.existsSync(contractsDir)) {
+    fs.mkdirSync(contractsDir);
+  }
+
+  fs.writeFileSync(
+    path.join(contractsDir, "contract-address.json"),
+    JSON.stringify({ MyShop: contracts.address }, undefined, 2)
+  );
+
+  const MyShopArtifact = artifacts.readArtifactSync(projectName);
+
+  fs.writeFileSync(
+    path.join(contractsDir, `${projectName}.json`),
+    JSON.stringify(MyShopArtifact, null, 2)
+  );
 };
