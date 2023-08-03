@@ -22,7 +22,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.9",
+    version: "0.8.21",
     settings: {
       optimizer: {
         enabled: true,
@@ -31,13 +31,13 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    localhost: {
-      url: `http://127.0.0.1:8545/`,
-    },
-    // sepolia: {
-    //   url: `https://late-lingering-leaf.ethereum-sepolia.discover.quiknode.pro/${process.env.SEPOLIA_APP_ID}/`,
-    //   accounts: [`${process.env.OWNER_PRIVATE_KEY}`],
+    // localhost: {
+    //   url: `http://127.0.0.1:8545/`,
     // },
+    sepolia: {
+      url: `https://late-lingering-leaf.ethereum-sepolia.discover.quiknode.pro/${process.env.SEPOLIA_APP_ID}/`,
+      accounts: [`${process.env.OWNER_PRIVATE_KEY}`],
+    },
   },
   gasReporter: {
     enabled: true,
